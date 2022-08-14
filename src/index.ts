@@ -12,9 +12,10 @@ const server = http.createServer(app)
 const io = new Server(server)
 const userService = new UserService()
 
-// 監測連接
+// 2. 監測連接
 io.on('connection', (socket) => {
 
+  // 3. 針對當個連接發送訊息
   socket.emit('userID', socket.id)
 
   socket.on('join', ({ userName, roomName }: { userName: string, roomName:string }) => {
@@ -23,24 +24,35 @@ io.on('connection', (socket) => {
       userName,
       roomName
     )
+
+    // socket內建，讓用戶夾到某空間
     socket.join(userData.roomName)
     userService.addUser(userData)
-    socket.broadcast.to(userData.roomName).emit('join', `${userName} 加入了 ${roomName} 聊天室`)
+    // socket.broadcast.to(roomName) => socket.join(roomName)
+    socket.broadcast
+      .to(userData.roomName)
+      .emit('join', `${userName} 加入了 ${roomName} 聊天室`)
   })
 
   socket.on('chat', (msg) => {  
     const time = moment.utc() 
     const userData = userService.getUser(socket.id)
     if (userData) {
-      io.to(userData.roomName).emit('chat', { userData, msg, time })
+      // 
+      io
+        .to(userData.roomName)
+        .emit('chat', { userData, msg, time })
     }
   })
 
+  // socket原生事件 disconnect -> 斷開連結
   socket.on('disconnect', () => {
     const userData = userService.getUser(socket.id)
     const userName = userData?.userName
     if (userName) {
-      socket.broadcast.to(userData.roomName).emit('leave', `${userData.userName} 離開 ${userData.roomName} 聊天室`)
+      socket.broadcast
+        .to(userData.roomName)
+        .emit('leave', `${userData.userName} 離開 ${userData.roomName} 聊天室`)
     }    
     userService.removeUser(socket.id)
   })

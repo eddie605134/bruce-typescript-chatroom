@@ -18,6 +18,13 @@ const clientIo = io()
 // 加入聊天室的發送
 clientIo.emit('join', { userName, roomName })
 
+window.addEventListener("load",function() {
+  setTimeout(function(){
+      // This hides the address bar:
+      window.scrollTo(0, 1);
+  }, 0);
+});
+
 const textInput = document.getElementById('textInput') as HTMLInputElement
 const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement
 const chatBoard = document.getElementById('chatBoard') as HTMLDivElement
@@ -67,8 +74,8 @@ function msgHandler(data: UserMsg) {
   }
 
   chatBoard.appendChild(divBox)
-  textInput.value = ''
   chatBoard.scrollTop = chatBoard.scrollHeight
+  
 }
 
 function roomMsgHandler(msg: string) {
@@ -81,10 +88,21 @@ function roomMsgHandler(msg: string) {
   chatBoard.scrollTop = chatBoard.scrollHeight
 }
 
+textInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+      const textValue = textInput.value
+      // chat event
+      clientIo.emit('chat', textValue)
+      textInput.value = ''
+    }
+})
+
 submitBtn.addEventListener('click', () => {
   const textValue = textInput.value
   // chat event
   clientIo.emit('chat', textValue)
+  textInput.value = ''
 })
 
 backBtn.addEventListener('click', () => {
