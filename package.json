@@ -6,7 +6,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
     "dev": "cross-env NODE_ENV=development nodemon ./src/index.ts",
-    "start": "cross-env NODE_ENV=production ts-node ./src/index.ts",
+    "start": "ts-node server.ts",
     "prettier": "prettier -w ./src",
     "clean": "rm -rf dist",
     "ngrok": "ngrok http 3000",
