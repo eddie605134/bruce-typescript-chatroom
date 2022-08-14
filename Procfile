@@ -1,1 +1,1 @@
-web:npm starth
+web:npm start
