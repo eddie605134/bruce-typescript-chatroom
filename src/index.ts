@@ -1,9 +1,9 @@
-import devServer from "@/server/dev";
-import prodServer from "@/server/prod";
+import devServer from "./server/dev";
+import prodServer from "./server/prod";
 import express from "express";
 import { Server } from 'socket.io'
 import http from 'http'
-import UserService from "@/service/UserService";
+import UserService from "./service/UserService";
 import moment from 'moment';
 
 const port = 3000;

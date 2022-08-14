@@ -6,12 +6,13 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
     "dev": "cross-env NODE_ENV=development nodemon ./src/index.ts",
-    "start": "node ./src/index.js",
+    "start": "cross-env NODE_ENV=production ts-node ./src/index.ts",
+    "starth": "node ./dist/src/index.js",
     "prettier": "prettier -w ./src",
     "clean": "rm -rf dist",
     "ngrok": "ngrok http 3000",
     "hello": "echo hello",
-    "deploy": "git add . && git commit -m Heroku && git push heroku main"
+    "postinstall": "tsc"
   },
   "author": "",
   "license": "ISC",
